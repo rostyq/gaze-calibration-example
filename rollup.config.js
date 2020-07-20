@@ -9,10 +9,10 @@ const production = !process.env.ROLLUP_WATCH;
 export default {
 	input: 'src/main.js',
 	output: {
+		name: 'app',
 		sourcemap: true,
 		format: 'iife',
-		name: 'app',
-		file: 'public/build/bundle.js'
+		file: 'public/build/bundle.js',
 	},
 	plugins: [
 		svelte({
@@ -32,13 +32,13 @@ export default {
 		// https://github.com/rollup/plugins/tree/master/packages/commonjs
 		resolve({
 			browser: true,
-			dedupe: ['svelte']
+			dedupe: ['svelte'],
 		}),
 		commonjs(),
 
 		// In dev mode, call `npm run start` once
 		// the bundle has been generated
-		!production && serve(),
+    !production && serve(),
 
 		// Watch the `public` directory and refresh the
 		// browser on changes when not in production
@@ -46,10 +46,10 @@ export default {
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
-		production && terser()
+		production && terser(),
 	],
 	watch: {
-		clearScreen: false
+		clearScreen: false,
 	}
 };
 

@@ -79,3 +79,20 @@ export function shuffle(array) {
 
     return array;
 }
+
+export function loadScript(src, name) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.async = true;
+    script.src = src;
+    document.head.append(script);
+
+    if (name == undefined) {
+      name = src.split('/').slice(-1)[0].split('.')[0];
+    }
+
+    script.addEventListener('load', () => resolve(window[name]));
+    script.addEventListener('error', error => reject(error));
+  });
+}
