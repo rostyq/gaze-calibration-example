@@ -1,11 +1,19 @@
 <script>
   import { Button, Spinner } from "sveltestrap";
+
   import Intro from './Intro.svelte';
   import Study from "./Study.svelte";
+  import ResultModal from "./ResultModal.svelte";
+  import ErrorAlert from "./ErrorAlert.svelte";
+
   import { loadScript } from './utils';
   import { GAZEFILTER_URL, NNC_MODELS, PUPLOC_URL } from './constants';
 
   let isLoading = false;
+
+  let errorMessage = "";
+  let studyResult;
+  let showResult = false;
 
   const destroyTracker = () => {
     if (gazefilter.tracker.ready) return gazefilter.tracker.destroy();
@@ -28,14 +36,16 @@
     }
   }
 
-  // handlers for study results
-  const onError = async error => {
-    console.error(error);
-    await destroyTracker();
+  const onError = error => {
+    destroyTracker();
+    errorMessage = error.message;
+    showError = true;
   };
-  const onSuccess = async result => {
-    console.log("success " + result)
-    await destroyTracker();
+
+  const onStudyEnded = buffers => {
+    destroyTracker();
+    studyResult = buffers;
+    showResult = true;
   };
 
   const decorateStart = callback => {
@@ -45,7 +55,7 @@
         await initTracker();
         await callback();
       } catch (error) {
-
+        onError(error);
       } finally {
         isLoading = false;
       }
@@ -55,19 +65,30 @@
 
 
 <main>
+
   <Intro>
-    <Study let:requestStart onError={onError} onSuccess={onSuccess}>
+
+    <Study let:requestStart onEnded={onStudyEnded}>
+
       <Button outline={true} color="primary" disabled={isLoading}
               on:click={decorateStart(requestStart)}>
         {#if isLoading}
           <Spinner color="primary" size='sm'></Spinner>
           <span>loading...</span>
         {:else}
-        start
+          start
         {/if}
       </Button>
+
     </Study>
+
   </Intro>
+
+  <ResultModal isOpen={showResult} resultBuffers={studyResult}></ResultModal>
+
+  {#if errorMessage}
+    <ErrorAlert toggle={() => (errorMessage = "")}>{errorMessage}</ErrorAlert>
+  {/if}
 </main>
 
 

@@ -5,14 +5,15 @@
 <Jumbotron>
   <h1 class="display-3">Hello!</h1>
   <p class="lead">
-    This is a simple hero unit, a simple Jumbotron-style
-    component for calling extra attention to featured
-    content or information.
+    This is Work-in-Progress data gathering tool for ASD research.
   </p>
   <hr class="my-2" />
   <p>
-    It uses utility classes for typography and spacing
-    to space content out within the larger container.
+    Click start to proceed. You will be asked to allow webcam usage.
+  </p>
+  <p>
+    For now recorded data will <b>not</b> be sent anywhere, you are able to download
+    it by yourself once experiment is finished.
   </p>
   <p class="lead">
     <slot></slot>
